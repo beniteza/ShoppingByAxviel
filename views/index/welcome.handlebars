@@ -1,0 +1,8 @@
+<h1>Welcome</h1>
+<p>Welcome to ShoppingByAxviel 1.0.0</p>
+<p>Search for items to buy or upload items to sell.</p>
+{{#if user}}
+<!--If user is logged in don't show the G button-->
+{{else}}
+<a href="/auth/google" class="btn btn-danger"><i class="fa fa-google left"></i> Login With Google</a>
+{{/if}}

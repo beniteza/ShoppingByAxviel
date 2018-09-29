@@ -1,6 +1,8 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const localStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const keys = require('./keys');
+const bcrypt = require('bcryptjs');
 
 //Load the User model
 const User = mongoose.model('users');
@@ -50,6 +52,40 @@ module.exports = function(passport) {
         });
       }
     )
+  );
+
+  //Local startegy w/o googleID
+  passport.use(
+    new localStrategy({ usernameField: 'email' }, (email, password, done) => {
+      //check if there's an user with that email
+      User.findOne({
+        email: email //see if the email passed matches a stored email
+      }).then(user => {
+        //returns a user
+        if (!user) {
+          //if there's not a user
+          //this takes an error and a user. but no user so false
+          return done(null, false, { message: 'No User Found' });
+        }
+
+        //if there is a user, check the password
+        //password = unencrypted pasw from the form ; user.password = encrypted pasw
+        //user is the one that has the email matched
+        //the callback takes an error and a boolean var called isMatched
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+          if (err) throw err;
+
+          //check if pasw matches
+          if (isMatch) {
+            //true then pasw does match
+            return done(null, user); //return the actual user
+          } else {
+            //pasw no match
+            return done(null, false, { message: 'Password Incorrect' });
+          }
+        });
+      });
+    })
   );
 
   //Serialize User

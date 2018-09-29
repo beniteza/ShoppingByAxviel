@@ -16,8 +16,26 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.redirect('/dashboard'); //to dashboard if passes
+    res.redirect('/'); //to home if passes
   }
 );
 
+//Verifies if user is authenticated and logged in
+router.get('/verify', (req, res) => {
+  if (req.user) {
+    //we're authenticated and have access to req.user
+    console.log(req.user);
+  } else {
+    console.log('Not Auth');
+  }
+});
+
+//Logout
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
 //---------
+
+module.exports = router;
