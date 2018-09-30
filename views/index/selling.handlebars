@@ -1,0 +1,35 @@
+<h1>Welcome, {{user.firstName}}</h1>
+<h4>Your Products</h4>
+
+{{#if items}}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Image</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+    <tr>
+      <td>{{itemName}}</td>
+      <td>{{itemPrice}}</td>
+      <td><img src="{{itemImage}}" alt=""></td>
+      <td>
+        <a href="/items/edit/{{id}}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+
+        <!--Delete Form-->
+        <form action="/items/{{id}}?_method=DELETE" method="post" id="delete-form">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{else}}
+<p>You have not created any stories yet.</p>
+{{/if}}

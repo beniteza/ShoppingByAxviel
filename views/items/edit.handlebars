@@ -1,0 +1,30 @@
+<h1>Edit Item</h1>
+
+<form action="/items/{{item.id}}?_method=PUT" method="post">
+  <input type="hidden" name="_method" value="PUT">
+
+  {{!-- Item Name --}}
+  <div class="form-group">
+    <label for="itemName">Name</label>
+    <input class="form-control" type="text" id="itemName" value="{{item.itemName}}">
+  </div>
+
+  {{!-- Item Price --}}
+  <div class="form-group">
+    <label for="itemPrice">Price</label>
+    <input class="form-control" type="text" id="itemPrice" value="{{item.itemPrice}}">
+  </div>
+
+  {{!-- Item Image --}}
+  <div class="form-group">
+    <label for="itemImage">Image</label>
+    <input class="form-control" type="text" id="itemImage" value="{{item.itemImage}}">
+  </div>
+
+  {{!-- Item Description --}}
+  <div class="form-group">
+    <label for="itemDescription">Description</label>
+    <textarea class="form-control" name="itemDescription" rows="3">{{item.itemDescription}}</textarea>
+  </div>
+
+</form>

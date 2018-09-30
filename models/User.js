@@ -23,6 +23,22 @@ const UserSchema = new Schema({
   password: {
     type: String
   },
+  cart: [
+    {
+      cartItem: {
+        type: Schema.Types.ObjectId,
+        ref: 'items'
+      }
+    }
+  ],
+  orders: [
+    {
+      orderItem: {
+        type: Schema.Types.ObjectId,
+        ref: 'items'
+      }
+    }
+  ],
   date: {
     type: Date,
     default: Date.now //automatically puts the current time
