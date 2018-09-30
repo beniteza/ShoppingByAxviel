@@ -1,0 +1,24 @@
+<h1>Items</h1>
+
+{{#each items}}
+<div class="card">
+  <div class="card-header">
+    {{itemName}}
+  </div>
+
+  <div class="card-body">
+    <img src="{{itemImage}}" width="96" height="96">
+    {{itemPrice}}
+    {{itemDescription}}
+    <a href="/items/show/{{id}}" class="btn btn-success">Read More</a>
+  </div>
+
+  <div class="card-footer mb-2">
+    <div class="chip">
+      <img src="{{user.image}}" alt="Person" width="96" height="96">
+      {{user.firstName}} {{user.lastName}}
+    </div>
+  </div>
+  {{else}}
+  <p>No items found.</p>
+  {{/each}}

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
+const { ensureAuthenticated, ensureGuest } = require('../helpers/auth');
+
 //------- ROUTES: START
 
 router.get('/', (req, res) => {
@@ -15,6 +17,10 @@ router.get('/dashboard', (req, res) => {
       stories: stories
     });
   });
+});
+
+router.get('/about', (req, res) => {
+  res.render('index/about');
 });
 
 //-------

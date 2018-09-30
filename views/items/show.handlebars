@@ -1,0 +1,117 @@
+<div class="row">
+  <div class="col-md-8">
+    <h1>{{item.itemName}}</h1>
+    <div class="card card-body">
+      <img src="{{item.itemImage}}" alt="">
+      {{item.itemPrice}}
+      {{item.itemDescription}}
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Reviews
+      </div>
+      {{#if user}}
+      <div class="card-body">
+        <!--New Comment Form-->
+        <form action="/items/review/{{item.id}}" method="post">
+          <div class="input-field">
+            <textarea name="reviewBody"></textarea>
+            <label for="">Add Review</label>
+          </div>
+          <input type="submit" value="Submit" class="btn">
+        </form>
+      </div>
+      {{/if}}
+    </div>
+
+    {{#each item.reviews}}
+    <div class="card">
+      <div class="card-body">
+        <h5>{{reviewBody}}</h5>
+        <div class="chip">
+          <img src="{{reviewUser.image}}" alt="Person" width="96" height="96">
+          {{reviewUser.firstName}} {{reviewUser.lastName}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+
+  </div>
+
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-header">
+        {{item.user.firstName}} {{item.user.lastName}}
+      </div>
+      <div class="card-body">
+        <img src="{{item.user.image}}" alt="" class="circle responsive-img">
+      </div>
+      <div class="card-footer">
+        <a href="" class="">More From {{item.user.firstName}}</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{{!--
+
+<div class="row">
+  <div class="col-md-8">
+
+    <h3>{{item.itemName}}</h3>
+    <div class="card card-body">
+      {{item.itemDescription}}
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Reviews
+      </div>
+      {{#if user}}
+      <div class="card-body">
+        <!--New Comment Form-->
+        <form action="/items/review/{{item.id}}" method="post">
+          <div class="input-field">
+            <textarea name="reviewBody"></textarea>
+            <label for="">Add Review</label>
+          </div>
+          <input type="submit" value="Submit" class="btn">
+        </form>
+      </div>
+      {{/if}}
+    </div>
+
+    {{#each item.reviews}}
+    <div class="card">
+      <div class="card-body">
+        <h5>{{reviewBody}}</h5>
+        <div class="chip">
+          <img src="{{reviewUser.image}}" alt="Person" width="96" height="96">
+          {{reviewUser.firstName}} {{reviewUser.lastName}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+
+  </div>
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-header">
+        {{item.user.firstName}} {{item.user.lastName}}
+      </div>
+      <div class="card-body">
+        <img src="{{item.user.image}}" alt="" class="circle responsive-img">
+      </div>
+      <div class="card-footer">
+        <a href="" class="">More From {{item.user.firstName}}</a>
+      </div>
+    </div>
+
+  </div>
+</div> --}}

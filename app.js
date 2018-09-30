@@ -1,5 +1,7 @@
 const express = require('express');
+const path = require('path');
 const exphbs = require('express-handlebars');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -9,6 +11,9 @@ const passport = require('passport');
 
 //Load User Model
 require('./models/User');
+
+//Load Item Model
+require('./models/Item');
 
 //-------
 
@@ -36,6 +41,11 @@ mongoose
   .catch(err => console.log(err));
 
 //------- ADD MIDDLEWARE: START
+
+//Body-Parser Middleware
+//let's us access req.body, req.title, etc (which are the names of the form inputs)
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //Handlebars Middleware
 app.engine(
@@ -79,13 +89,19 @@ app.use((req, res, next) => {
 
 const index = require('./routes/index');
 const auth = require('./routes/auth');
+const items = require('./routes/items');
 
 //-------
+
+//Set static folder
+//join current directory with public dir to be able to use css
+app.use(express.static(path.join(__dirname, 'public')));
 
 //------- USE ROUTES: START
 
 app.use('/', index);
 app.use('/auth', auth);
+app.use('/items', items);
 
 //-------
 
