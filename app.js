@@ -94,6 +94,7 @@ app.use((req, res, next) => {
 const index = require('./routes/index');
 const auth = require('./routes/auth');
 const items = require('./routes/items');
+const users = require('./routes/users');
 
 //-------
 
@@ -106,6 +107,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/auth', auth);
 app.use('/items', items);
+app.use('/users', users);
 
 //-------
 

@@ -1,0 +1,31 @@
+<h1>Cart</h1>
+
+{{#each items}}
+<div class="card">
+  <div class="card-header">
+    {{itemName}}
+  </div>
+
+  <div class="card-body">
+    <img src="{{itemImage}}" width="96" height="96">
+    {{itemPrice}}
+    {{itemDescription}}
+    <a href="/items/show/{{id}}" class="btn btn-success">Read More</a>
+
+    <form action="/users/cart/{{id}}?_method=DELETE" method="post" id="delete-form">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Delete</button>
+    </form>
+
+  </div>
+  {{else}}
+  <p>No items found.</p>
+  {{/each}}
+
+  {{#if items}}
+  <form action="/users/order/{{user.id}}" method="post" id="order-form">
+    <input type="hidden" name="items" value="{{items}}">
+    <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Place Order</button>
+  </form>
+  {{/if}}
+</div>

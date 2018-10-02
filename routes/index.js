@@ -14,12 +14,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/selling', (req, res) => {
-  //Find all stories of the logged in user
+  //Find all items for sale of the logged in user
   Item.find({ user: req.user.id }).then(items => {
     res.render('index/selling', {
       items: items
     });
-    console.log(items);
   });
 });
 

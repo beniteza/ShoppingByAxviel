@@ -1,0 +1,21 @@
+<h1>Orders</h1>
+
+{{#each orders}}
+<div class="card">
+  <div class="card-header">
+    Ordered on: {{date}}
+  </div>
+
+  <div class="card-body">
+    {{#each orderItems}}
+    <img src="{{itemImage}}" width="96" height="96">
+    {{itemPrice}}
+    {{itemDescription}}
+    <a href="/items/show/{{id}}" class="btn btn-success">Read More</a>
+    {{/each}}
+
+  </div>
+  {{else}}
+  <p>No orders found.</p>
+  {{/each}}
+</div>

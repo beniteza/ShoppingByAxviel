@@ -1,0 +1,11 @@
+<div class="card card-body">
+  <h3>Profile</h3>
+  <form action="/users/profile/{{user.id}}?_method=PUT" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="text" class="form-control" name="image" value="{{user.image}}">
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+</div>

@@ -36,6 +36,18 @@ router.get('/show/:id', (req, res) => {
     });
 });
 
+//List Items for Sale From a User
+router.get('/user/:userId', (req, res) => {
+  Item.find({ user: req.params.userId })
+    .populate('user')
+    .then(items => {
+      //Use the index view and just pass the user's items
+      res.render('items/index', {
+        items: items
+      });
+    });
+});
+
 //Add item from
 router.get('/add', (req, res) => {
   res.render('items/add');
@@ -90,7 +102,7 @@ router.put('/:id', (req, res) => {
   });
 });
 
-//Delete Story
+//Delete Item
 router.delete('/:id', (req, res) => {
   Item.remove({ _id: req.params.id }).then(() => {
     res.redirect('/dashboard');

@@ -33,9 +33,15 @@ const UserSchema = new Schema({
   ],
   orders: [
     {
-      orderItem: {
-        type: Schema.Types.ObjectId,
-        ref: 'items'
+      orderItems: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'items'
+        }
+      ],
+      date: {
+        type: Date,
+        default: Date.now
       }
     }
   ],
