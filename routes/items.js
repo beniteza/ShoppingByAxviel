@@ -54,7 +54,7 @@ router.get('/add', ensureAuthenticated, (req, res) => {
 });
 
 //Process Add Item
-router.post('/', (req, res) => {
+router.post('/add', ensureAuthenticated, (req, res) => {
   //Build up item object
   const newItem = {
     itemName: req.body.itemName,
@@ -65,14 +65,14 @@ router.post('/', (req, res) => {
   };
   //Create Item
   new Item(newItem).save().then(item => {
-    res.redirect(`/item/show/${item.id}`);
+    res.redirect(`/items/show/${item.id}`);
   });
 });
 
 //Edit item form
 router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   Item.findOne({
-    _id: req.params.id //id in the url
+    _id: req.params.id
   }).then(item => {
     if (item.user != req.user.id) {
       //Prevent another user from editing my item
@@ -86,11 +86,10 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
 });
 
 //Edit Form process
-router.put('/:id', (req, res) => {
+router.put('/:id', ensureAuthenticated, (req, res) => {
   Item.findOne({
-    _id: req.params.id //id in the url
+    _id: req.params.id
   }).then(item => {
-    //New Values
     item.itemName = req.body.itemName;
     item.itemPrice = req.body.itemPrice;
     item.itemDescription = req.body.itemDescription;
@@ -103,9 +102,9 @@ router.put('/:id', (req, res) => {
 });
 
 //Delete Item
-router.delete('/:id', (req, res) => {
+router.delete('/:id', ensureAuthenticated, (req, res) => {
   Item.remove({ _id: req.params.id }).then(() => {
-    res.redirect('/dashboard');
+    res.redirect('/');
   });
 });
 

@@ -46,4 +46,4 @@ const ItemSchema = new Schema({
 });
 
 //Create collection & add Schema
-mongoose.model('items', ItemSchema, 'items'); //third param 'stories' specifies the name of the collection
+mongoose.model('items', ItemSchema, 'items');

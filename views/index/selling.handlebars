@@ -1,65 +1,48 @@
-{{!-- <h1>Items</h1>
+<section id="posts">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card card-body">
+          <a href="/items/add" class="btn btn-block btn-primary my-2">Sell New Item</a>
+          <h4 class="text-center">Your Products</h4>
+          {{#if items}}
+          <table class="table mt-2">
+            <thead class="thead-dark">
+              <tr>
+                <th>Preview</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
 
-{{#each items}}
-<div class="card">
-  <div class="card-header">
-    {{itemName}}
-  </div>
-
-  <div class="card-body">
-    <img src="{{itemImage}}" width="96" height="96">
-    {{itemPrice}}
-    {{itemDescription}}
-    <a href="/items/show/{{id}}" class="btn btn-success">Read More</a>
-  </div>
-
-  <div class="card-footer mb-2">
-    <div class="chip">
-      <img src="{{user.image}}" alt="Person" width="96" height="96">
-      {{user.firstName}} {{user.lastName}}
-    </div>
-  </div>
-  {{else}}
-  <p>No items found.</p>
-  {{/each}} --}}
-
-  <section id="posts">
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-header">
-              <h4>Your Products</h4>
-            </div>
-            {{#each items}}
-            <table class="table table-striped">
-              <thead class="thead-dark">
-                <tr>
-                  <th>Preview</th>
-                  <th>Name</th>
-                  <th>Price</th>
-                  <th></th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td><img src="{{itemImage}}" alt="" class="img-fluid" width="150" height="150"></td>
-                  <td>{{itemName}}</td>
-                  <td>{{itemPrice}}</td>
-                  <td>
-                    <a href="/items/show/{{id}}" class="btn btn-secondary">
-                      <i class="fa fa-angle-double-right"></i> Show
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            {{else}}
-            <p>No items found.</p>
-            {{/each}}
-          </div>
+            <tbody>
+              {{#each items}}
+              <tr>
+                <td><img src="{{itemImage}}" alt="" class="img-fluid" width="150" height="150"></td>
+                <td>{{itemName}}</td>
+                <td>{{itemPrice}}</td>
+                <td>
+                  <a href="/items/show/{{id}}" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Show
+                  </a>
+                </td>
+                <td>
+                  <form action="/items/{{id}}?_method=DELETE" method="post" id="delete-form">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Delete</button>
+                  </form>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+          {{else}}
+          <p class='text-center'>No items found.</p>
+          {{/if}}
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>

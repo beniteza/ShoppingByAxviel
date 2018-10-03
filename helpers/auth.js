@@ -5,6 +5,8 @@ module.exports = {
       return next();
     }
 
+    //display error msg is not logged in
+    req.flash('error_msg', 'Not Authorized');
     res.redirect('/auth/login');
   },
   ensureGuest: function(req, res, next) {

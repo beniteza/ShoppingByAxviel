@@ -52,4 +52,4 @@ const UserSchema = new Schema({
 });
 
 //Create collection & add Schema
-mongoose.model('users', UserSchema); //users= name of collection. Goes in mongoose.model('*')
+mongoose.model('users', UserSchema);

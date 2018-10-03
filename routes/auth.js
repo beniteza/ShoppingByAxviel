@@ -6,19 +6,18 @@ const { ensureAuthenticated, ensureGuest } = require('../helpers/auth');
 
 //---------ROUTES: START
 
-//The scope asks the user to share their profile and email
 router.get(
   '/google',
+  ensureGuest,
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-//if it fails go back to home page
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', { failureRedirect: '/auth/login' }),
   (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect('/'); //to home if passes
+    // Successful authentication.
+    res.redirect('/');
   }
 );
 
@@ -38,19 +37,19 @@ router.get('/login', ensureGuest, (req, res) => {
 });
 
 //Local Login Form Post
-router.post('/login', (req, res, next) => {
+router.post('/login', ensureGuest, (req, res, next) => {
   passport.authenticate('local', {
-    //we using the 'local' staregy
-    successRedirect: '/' //where it goes after successful login
-    //failureRedirect: '/users/login',
-    //failureFlash: true //show flash msg if the login fails
-  })(req, res, next); //this immediately fires off
+    successRedirect: '/',
+    failureRedirect: '/auth/login',
+    failureFlash: true //show flash msg if the login fails
+  })(req, res, next);
 });
 
 //Logout
 router.get('/logout', ensureAuthenticated, (req, res) => {
   req.logout();
-  res.redirect('/');
+  req.flash('success_msg', 'You are logged out');
+  res.redirect('/auth/login');
 });
 
 //---------

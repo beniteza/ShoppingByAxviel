@@ -1,13 +1,13 @@
 <div class="card card-body">
   <h3 class="text-center">Sell New Item</h3>
-  <form action="/items" method="post">
+  <form action="/items/add" method="post">
     <div class="form-group">
       <label for="itemName">Item Name</label>
       <input type="text" class="form-control" name="itemName" value="{{itemName}}">
     </div>
     <div class="form-group">
       <label for="itemPrice">Price</label>
-      <input type="text" class="form-control" name="itemPrice" value="{{itemPrice}}">
+      <input type="number" class="form-control" name="itemPrice" value="{{itemPrice}}">
     </div>
     <div class="form-group">
       <label for="itemImage">Photo Link</label>

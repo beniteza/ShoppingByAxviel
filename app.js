@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
+const flash = require('connect-flash');
 
 //------- LOAD MODELS: START
 
@@ -26,6 +27,9 @@ const app = express();
 //Load Keys
 const keys = require('./config/keys');
 
+//Load Handlebars Helpers
+const { formatDate } = require('./helpers/hbs');
+
 //Map global promises
 mongoose.Promise = global.Promise;
 
@@ -43,6 +47,9 @@ mongoose
 
 //------- ADD MIDDLEWARE: START
 
+//Connect-Flash Middleware
+app.use(flash());
+
 //Body-Parser Middleware
 //let's us access req.body, req.title, etc (which are the names of the form inputs)
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,11 +63,7 @@ app.engine(
   'handlebars',
   exphbs({
     helpers: {
-      // truncate: truncate,
-      // stripTags: stripTags,
-      // formatDate: formatDate,
-      // select: select,
-      // editIcon: editIcon
+      formatDate: formatDate
     },
     defaultLayout: 'main'
   })
@@ -84,8 +87,12 @@ app.use(passport.session()); //needs express-session middleware
 //-------
 
 //Set Global Vars
-app.use((req, res, next) => {
-  res.locals.user = req.user || null;
+app.use(function(req, res, next) {
+  //make the success_msg variable global.
+  res.locals.success_msg = req.flash('success_msg'); //success msgs will be saved here
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error'); //for user not found / incorrect password
+  res.locals.user = req.user || null; //req obj user when logged in; null when not
   next();
 });
 

@@ -1,34 +1,33 @@
 <div class="row">
   <div class="col-md-8">
-    <h1>{{item.itemName}}</h1>
-    <div class="card card-body">
-      <img src="{{item.itemImage}}" alt="">
-      {{item.itemPrice}}
-      {{item.itemDescription}}
-
-      {{#if user}}
-      <form action="/users/cart" method="post">
-        <input type="hidden" name="item" value="{{item.id}}">
-        <input type="submit" value="Add to Cart" class="btn">
-      </form>
-      {{/if}}
-    </div>
 
     <div class="card">
-      <div class="card-header">
-        Reviews
-      </div>
-      {{#if user}}
+      <img class="card-img-top img-fluid" src="{{item.itemImage}}" alt="">
       <div class="card-body">
-        <!--New Comment Form-->
-        <form action="/items/review/{{item.id}}" method="post">
-          <div class="input-field">
-            <textarea name="reviewBody"></textarea>
-            <label for="">Add Review</label>
-          </div>
-          <input type="submit" value="Submit" class="btn">
-        </form>
+        <h1 class="card-title">{{item.itemName}}</h4>
+          <h3 class="card-text">${{item.itemPrice}}</h6>
+            <p class="card-text">{{item.itemDescription}}</p>
+
+            {{#if user}}
+            <form action="/users/cart" method="post">
+              <input type="hidden" name="item" value="{{item.id}}">
+              <input type="submit" value="Add to Cart" class="btn btn-block btn-primary">
+            </form>
+            {{/if}}
       </div>
+    </div>
+
+
+    <div class="card card-body mt-3">
+      <h4 class="text-center">Reviews</h4>
+      {{#if user}}
+      <!--New Comment Form-->
+      <form action="/items/review/{{item.id}}" method="post">
+        <div class="input-field">
+          <textarea class="form-control" name="reviewBody"></textarea>
+        </div>
+        <input type="submit" value="Add New Review" class="btn btn-primary btn-block mt-3">
+      </form>
       {{/if}}
     </div>
 
@@ -36,7 +35,7 @@
     <div class="card">
       <div class="card-body">
         <h5>{{reviewBody}}</h5>
-        <div class="chip">
+        <div class="chip mt-2">
           <img src="{{reviewUser.image}}" alt="Person" width="96" height="96">
           {{reviewUser.firstName}} {{reviewUser.lastName}}
         </div>
@@ -49,12 +48,10 @@
 
   <div class="col-md-4">
 
-    <div class="card">
-      <div class="card-header">
-        {{item.user.firstName}} {{item.user.lastName}}
-      </div>
+    <div class="card text-center">
       <div class="card-body">
-        <img src="{{item.user.image}}" alt="" class="circle responsive-img">
+        <h2>{{item.user.firstName}} {{item.user.lastName}}</h2>
+        <img src="{{item.user.image}}" alt="" class="card-img-top img-fluid">
       </div>
       <div class="card-footer">
         <a href="/items/user/{{item.user.id}}" class="">More From {{item.user.firstName}}</a>

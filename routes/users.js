@@ -15,35 +15,13 @@ const Item = mongoose.model('items');
 
 //------USERS ROUTES: START
 
-// //User Login Route
-// router.get('/login', (req, res) => {
-//   res.render('users/login');
-// });
-
-// //Login Form Post
-// router.post('/login', (req, res, next) => {
-//   passport.authenticate('local', {
-//     //we using the 'local' staregy
-//     successRedirect: '/' //where it goes after successful login
-//     //failureRedirect: '/users/login',
-//     //failureFlash: true //show flash msg if the login fails
-//   })(req, res, next); //this immediately fires off
-// });
-
-// //Logout User Route
-// router.get('/logout', (req, res) => {
-//   req.logout(); //this logs us out
-//   //req.flash('success_msg', 'You are logged out');
-//   res.redirect('/users/login');
-// });
-
 //User Register Route
 router.get('/register', ensureGuest, (req, res) => {
   res.render('users/register');
 });
 
 //Register Form Post
-router.post('/register', (req, res) => {
+router.post('/register', ensureGuest, (req, res) => {
   //password validation
   let errors = [];
 
@@ -62,7 +40,8 @@ router.post('/register', (req, res) => {
     res.render('users/register', {
       //re-render the form with all the already entered data
       errors: errors,
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
       password: req.body.password,
       password2: req.body.password2
@@ -73,7 +52,7 @@ router.post('/register', (req, res) => {
       //the user
       if (user) {
         //if there's already an user with this email
-        //req.flash('error_msg', 'Email already registered');
+        req.flash('error_msg', 'Email already registered');
         res.redirect('/users/register');
       } else {
         //do the rest of the process for registring a new user
@@ -96,12 +75,11 @@ router.post('/register', (req, res) => {
             newUser
               .save() //save the user in db
               .then(user => {
-                //user = is the new user
-                // req.flash(
-                //   'success_msg',
-                //   'You are now registered and can log in'
-                // );
-                res.redirect('/users/login');
+                req.flash(
+                  'success_msg',
+                  'You are now registered and can log in'
+                );
+                res.redirect('/auth/login');
               })
               .catch(err => {
                 //just in case there's any error
@@ -117,73 +95,21 @@ router.post('/register', (req, res) => {
 
 //Show Cart
 router.get('/cart', ensureAuthenticated, (req, res) => {
-  let items = [];
-
-  // User.findOne({
-  //   _id: req.params.id
-  // }).then(function getItems(user) {
-  //   cart = user.cart;
-  //   //let items = [];
-
-  //   function getItems() {
-  //     for (let i = 0; i < cart.length; i++) {
-  //       Item.findOne({
-  //         _id: cart[i].cartItem
-  //       }).then(item => {
-  //         items.unshift(item);
-  //       });
-  //     }
-  //     return new Promise(resolve => {
-  //       setTimeout(() => {
-  //         resolve(items);
-  //       }, 2000);
-  //     });
-  //   }
-  //   //Goota set Timeout to wait until all items are found. Less times means the promise from getItems() is returned without all the items. FIX LATER
-  //   async function f1() {
-  //     items = await getItems();
-
-  //     res.render('index/cart', {
-  //       //user: user,
-  //       items: items
-  //     });
-  //   }
-
-  //   f1(); //FIXX
-  // });
-
   cart = req.user.cart;
-  //let items = [];
-
-  function getItems() {
-    for (let i = 0; i < cart.length; i++) {
-      Item.findOne({
-        _id: cart[i].cartItem
-      }).then(item => {
-        items.unshift(item);
-      });
-    }
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(items);
-      }, 2000);
-    });
+  let cartItems = [];
+  for (let i = 0; i < cart.length; i++) {
+    cartItems.unshift(cart[i].cartItem._id);
   }
-  //Goota set Timeout to wait until all items are found. Less times means the promise from getItems() is returned without all the items. FIX LATER
-  async function f1() {
-    items = await getItems();
 
+  Item.find({ _id: { $in: cartItems } }).then(items => {
     res.render('index/cart', {
-      //user: user,
       items: items
     });
-  }
-
-  f1(); //FIXX
+  });
 });
 
 //Delete Cart Item
-router.delete('/cart/:id', (req, res) => {
+router.delete('/cart/:id', ensureAuthenticated, (req, res) => {
   user = req.user;
   cart = user.cart;
   for (let i = 0; i < cart.length; i++) {
@@ -199,13 +125,6 @@ router.delete('/cart/:id', (req, res) => {
 
 //Add Cart Item
 router.post('/cart', ensureAuthenticated, (req, res) => {
-  // User.findOne({
-  //   _id: req.params.id
-  // }).then(user => {
-  //   const newCartItem = {
-  //     cartItem: req.body.item
-  //   };
-
   user = req.user;
   const newCartItem = {
     cartItem: req.body.item
@@ -217,21 +136,15 @@ router.post('/cart', ensureAuthenticated, (req, res) => {
     res.redirect('/users/cart');
   });
 });
-// });
 
 //Add Order
-router.post('/orders', (req, res) => {
+router.post('/orders', ensureAuthenticated, (req, res) => {
   const orderItems = [];
-  // const cartItems = req.body.items;
   user = req.user;
   const cartItems = user.cart;
 
   for (let i = 0; i < cartItems.length; i++) {
-    console.log(cartItems[i].id);
-  }
-
-  for (let i = 0; i < cartItems.length; i++) {
-    orderItems.unshift(cartItems[i].id);
+    orderItems.unshift(cartItems[i].cartItem);
   }
 
   const newOrderItems = {
@@ -241,7 +154,7 @@ router.post('/orders', (req, res) => {
   user.orders.unshift(newOrderItems);
   user.cart = [];
   user.save().then(user => {
-    res.redirect(`/orders/${user.id}`);
+    res.redirect('/users/orders');
   });
 });
 
@@ -250,8 +163,17 @@ router.get('/orders', ensureAuthenticated, (req, res) => {
   const user = req.user;
   const orders = user.orders;
 
-  res.render('index/orders', {
-    orders: orders
+  let orderItems = [];
+  for (let i = 0; i < orders.length; i++) {
+    for (let j = 0; j < orders[i].orderItems.length; j++) {
+      orderItems.unshift(orders[i].orderItems[j]._id);
+    }
+  }
+
+  Item.find({ _id: { $in: orderItems } }).then(items => {
+    res.render('index/orders', {
+      items: items
+    });
   });
 });
 
@@ -264,13 +186,23 @@ router.get('/profile', ensureAuthenticated, (req, res) => {
 });
 
 //Edit Form process
-router.put('/profile', (req, res) => {
+router.put('/profile', ensureAuthenticated, (req, res) => {
   user = req.user;
-  const image = req.body.image;
-  user.image = image;
+  user.firstName = req.body.firstName;
+  user.lastName = req.body.lastName;
+  user.image = req.body.image;
 
   user.save().then(user => {
     res.redirect('/');
+  });
+});
+
+router.get('/selling', ensureAuthenticated, (req, res) => {
+  //Find all items for sale of the logged in user
+  Item.find({ user: req.user.id }).then(items => {
+    res.render('index/selling', {
+      items: items
+    });
   });
 });
 
