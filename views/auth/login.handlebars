@@ -3,7 +3,7 @@
     <div class="card card-body">
       <img src="/img/logo.png" alt="" class="logo">
       <h3 class="text-center">Account Login</h3>
-      <form action="/users/login" method="post">
+      <form action="/auth/login" method="post">
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="" class="form-control" required>
@@ -12,11 +12,11 @@
           <label for="password">Password</label>
           <input type="password" name="password" id="" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-block btn-primary mb-2">Login</button>
       </form>
 
-      <h4>Or</h4>
-      <a href="/auth/google" class="btn btn-danger"><i class="fa fa-google left"></i> Login With Google</a>
+      <h4 class="text-center">Or</h4>
+      <a href="/auth/google" class="btn btn-danger mt-2"><i class="fa fa-google left"></i> Login With Google</a>
     </div>
   </div>
 </div>

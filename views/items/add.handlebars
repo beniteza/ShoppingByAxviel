@@ -1,22 +1,22 @@
 <div class="card card-body">
-  <h3>Add Item</h3>
+  <h3 class="text-center">Sell New Item</h3>
   <form action="/items" method="post">
     <div class="form-group">
-      <label for="itemName">itemName</label>
+      <label for="itemName">Item Name</label>
       <input type="text" class="form-control" name="itemName" value="{{itemName}}">
     </div>
     <div class="form-group">
-      <label for="itemPrice">itemPrice</label>
+      <label for="itemPrice">Price</label>
       <input type="text" class="form-control" name="itemPrice" value="{{itemPrice}}">
     </div>
     <div class="form-group">
-      <label for="itemImage">itemImage</label>
+      <label for="itemImage">Photo Link</label>
       <input type="text" class="form-control" name="itemImage" value="{{itemImage}}">
     </div>
     <div class="form-group">
-      <label for="itemDescription">itemDescription</label>
+      <label for="itemDescription">Description</label>
       <textarea class="form-control" name="itemDescription">{{itemDescription}}</textarea>
     </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="btn btn-block btn-primary" type="submit">Sell New Item</button>
   </form>
 </div>

@@ -49,7 +49,7 @@ router.get('/user/:userId', (req, res) => {
 });
 
 //Add item from
-router.get('/add', (req, res) => {
+router.get('/add', ensureAuthenticated, (req, res) => {
   res.render('items/add');
 });
 
@@ -69,13 +69,13 @@ router.post('/', (req, res) => {
   });
 });
 
-//Edit story form
+//Edit item form
 router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   Item.findOne({
     _id: req.params.id //id in the url
   }).then(item => {
     if (item.user != req.user.id) {
-      //Prevent another user from editing my story
+      //Prevent another user from editing my item
       res.redirect('/items');
     } else {
       res.render('items/edit', {
@@ -110,7 +110,7 @@ router.delete('/:id', (req, res) => {
 });
 
 //Add Review
-router.post('/review/:id', (req, res) => {
+router.post('/review/:id', ensureAuthenticated, (req, res) => {
   Item.findOne({
     _id: req.params.id
   }).then(item => {

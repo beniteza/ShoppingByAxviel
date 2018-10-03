@@ -6,10 +6,12 @@
       {{item.itemPrice}}
       {{item.itemDescription}}
 
-      <form action="/users/cart/{{user.id}}" method="post">
+      {{#if user}}
+      <form action="/users/cart" method="post">
         <input type="hidden" name="item" value="{{item.id}}">
         <input type="submit" value="Add to Cart" class="btn">
       </form>
+      {{/if}}
     </div>
 
     <div class="card">

@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs'); //bring in bcryptjs
 const passport = require('passport'); //bring in passport
 const router = express.Router(); //bring in the router from express
 
+const { ensureAuthenticated, ensureGuest } = require('../helpers/auth');
+
 //Load User Model
 require('../models/User');
 const User = mongoose.model('users');
@@ -13,30 +15,30 @@ const Item = mongoose.model('items');
 
 //------USERS ROUTES: START
 
-//User Login Route
-router.get('/login', (req, res) => {
-  res.render('users/login');
-});
+// //User Login Route
+// router.get('/login', (req, res) => {
+//   res.render('users/login');
+// });
 
-//Login Form Post
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    //we using the 'local' staregy
-    successRedirect: '/' //where it goes after successful login
-    //failureRedirect: '/users/login',
-    //failureFlash: true //show flash msg if the login fails
-  })(req, res, next); //this immediately fires off
-});
+// //Login Form Post
+// router.post('/login', (req, res, next) => {
+//   passport.authenticate('local', {
+//     //we using the 'local' staregy
+//     successRedirect: '/' //where it goes after successful login
+//     //failureRedirect: '/users/login',
+//     //failureFlash: true //show flash msg if the login fails
+//   })(req, res, next); //this immediately fires off
+// });
 
-//Logout User Route
-router.get('/logout', (req, res) => {
-  req.logout(); //this logs us out
-  //req.flash('success_msg', 'You are logged out');
-  res.redirect('/users/login');
-});
+// //Logout User Route
+// router.get('/logout', (req, res) => {
+//   req.logout(); //this logs us out
+//   //req.flash('success_msg', 'You are logged out');
+//   res.redirect('/users/login');
+// });
 
 //User Register Route
-router.get('/register', (req, res) => {
+router.get('/register', ensureGuest, (req, res) => {
   res.render('users/register');
 });
 
@@ -114,41 +116,70 @@ router.post('/register', (req, res) => {
 });
 
 //Show Cart
-router.get('/cart/:id', (req, res) => {
+router.get('/cart', ensureAuthenticated, (req, res) => {
   let items = [];
 
-  User.findOne({
-    _id: req.params.id
-  }).then(function getItems(user) {
-    cart = user.cart;
-    //let items = [];
+  // User.findOne({
+  //   _id: req.params.id
+  // }).then(function getItems(user) {
+  //   cart = user.cart;
+  //   //let items = [];
 
-    function getItems() {
-      for (let i = 0; i < cart.length; i++) {
-        Item.findOne({
-          _id: cart[i].cartItem
-        }).then(item => {
-          items.unshift(item);
-        });
-      }
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(items);
-        }, 2000);
+  //   function getItems() {
+  //     for (let i = 0; i < cart.length; i++) {
+  //       Item.findOne({
+  //         _id: cart[i].cartItem
+  //       }).then(item => {
+  //         items.unshift(item);
+  //       });
+  //     }
+  //     return new Promise(resolve => {
+  //       setTimeout(() => {
+  //         resolve(items);
+  //       }, 2000);
+  //     });
+  //   }
+  //   //Goota set Timeout to wait until all items are found. Less times means the promise from getItems() is returned without all the items. FIX LATER
+  //   async function f1() {
+  //     items = await getItems();
+
+  //     res.render('index/cart', {
+  //       //user: user,
+  //       items: items
+  //     });
+  //   }
+
+  //   f1(); //FIXX
+  // });
+
+  cart = req.user.cart;
+  //let items = [];
+
+  function getItems() {
+    for (let i = 0; i < cart.length; i++) {
+      Item.findOne({
+        _id: cart[i].cartItem
+      }).then(item => {
+        items.unshift(item);
       });
     }
-    //Goota set Timeout to wait until all items are found. Less times means the promise from getItems() is returned without all the items. FIX LATER
-    async function f1() {
-      items = await getItems();
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(items);
+      }, 2000);
+    });
+  }
+  //Goota set Timeout to wait until all items are found. Less times means the promise from getItems() is returned without all the items. FIX LATER
+  async function f1() {
+    items = await getItems();
 
-      res.render('index/cart', {
-        //user: user,
-        items: items
-      });
-    }
+    res.render('index/cart', {
+      //user: user,
+      items: items
+    });
+  }
 
-    f1(); //FIXX
-  });
+  f1(); //FIXX
 });
 
 //Delete Cart Item
@@ -162,29 +193,34 @@ router.delete('/cart/:id', (req, res) => {
     }
   }
   user.save().then(user => {
-    res.redirect(`/cart/${user.id}`);
+    res.redirect('/users/cart');
   });
 });
 
 //Add Cart Item
-router.post('/cart/:id', (req, res) => {
-  User.findOne({
-    _id: req.params.id
-  }).then(user => {
-    const newCartItem = {
-      cartItem: req.body.item
-    };
+router.post('/cart', ensureAuthenticated, (req, res) => {
+  // User.findOne({
+  //   _id: req.params.id
+  // }).then(user => {
+  //   const newCartItem = {
+  //     cartItem: req.body.item
+  //   };
 
-    // Add to review array
-    user.cart.unshift(newCartItem);
-    user.save().then(user => {
-      res.redirect(`/cart/${user.id}`);
-    });
+  user = req.user;
+  const newCartItem = {
+    cartItem: req.body.item
+  };
+
+  // Add to review array
+  user.cart.unshift(newCartItem);
+  user.save().then(user => {
+    res.redirect('/users/cart');
   });
 });
+// });
 
 //Add Order
-router.post('/order/:id', (req, res) => {
+router.post('/orders', (req, res) => {
   const orderItems = [];
   // const cartItems = req.body.items;
   user = req.user;
@@ -210,7 +246,7 @@ router.post('/order/:id', (req, res) => {
 });
 
 //Show Orders
-router.get('/orders/:id', (req, res) => {
+router.get('/orders', ensureAuthenticated, (req, res) => {
   const user = req.user;
   const orders = user.orders;
 
@@ -220,7 +256,7 @@ router.get('/orders/:id', (req, res) => {
 });
 
 //Edit profile form
-router.get('/profile/:id', (req, res) => {
+router.get('/profile', ensureAuthenticated, (req, res) => {
   const user = req.user;
   res.render('users/profile', {
     user: user
@@ -228,8 +264,7 @@ router.get('/profile/:id', (req, res) => {
 });
 
 //Edit Form process
-router.put('/profile/:id', (req, res) => {
-  console.log('HEEEEEEEEEEE');
+router.put('/profile', (req, res) => {
   user = req.user;
   const image = req.body.image;
   user.image = image;

@@ -5,12 +5,12 @@ module.exports = {
       return next();
     }
 
-    res.redirect('/');
+    res.redirect('/auth/login');
   },
   ensureGuest: function(req, res, next) {
     //The viewer is a guest
     if (req.isAuthenticated()) {
-      res.redirect('/dashboard');
+      res.redirect('/');
     } else {
       return next();
     }

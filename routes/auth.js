@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
+const { ensureAuthenticated, ensureGuest } = require('../helpers/auth');
+
 //---------ROUTES: START
 
 //The scope asks the user to share their profile and email
@@ -30,8 +32,23 @@ router.get('/verify', (req, res) => {
   }
 });
 
+//Local Login Route
+router.get('/login', ensureGuest, (req, res) => {
+  res.render('auth/login');
+});
+
+//Local Login Form Post
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    //we using the 'local' staregy
+    successRedirect: '/' //where it goes after successful login
+    //failureRedirect: '/users/login',
+    //failureFlash: true //show flash msg if the login fails
+  })(req, res, next); //this immediately fires off
+});
+
 //Logout
-router.get('/logout', (req, res) => {
+router.get('/logout', ensureAuthenticated, (req, res) => {
   req.logout();
   res.redirect('/');
 });

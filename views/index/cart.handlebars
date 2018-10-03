@@ -1,4 +1,4 @@
-<h1>Cart</h1>
+{{!-- <h1>Cart</h1>
 
 {{#each items}}
 <div class="card">
@@ -28,4 +28,77 @@
     <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Place Order</button>
   </form>
   {{/if}}
-</div>
+</div> --}}
+
+{{!-- <h1>Items</h1>
+
+{{#each items}}
+<div class="card">
+  <div class="card-header">
+    {{itemName}}
+  </div>
+
+  <div class="card-body">
+    <img src="{{itemImage}}" width="96" height="96">
+    {{itemPrice}}
+    {{itemDescription}}
+    <a href="/items/show/{{id}}" class="btn btn-success">Read More</a>
+  </div>
+
+  <div class="card-footer mb-2">
+    <div class="chip">
+      <img src="{{user.image}}" alt="Person" width="96" height="96">
+      {{user.firstName}} {{user.lastName}}
+    </div>
+  </div>
+  {{else}}
+  <p>No items found.</p>
+  {{/each}} --}}
+
+  <section id="posts">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <h4>Cart</h4>
+            </div>
+            {{#each items}}
+            <table class="table table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Preview</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td><img src="{{itemImage}}" alt="" class="img-fluid" width="150" height="150"></td>
+                  <td>{{itemName}}</td>
+                  <td>{{itemPrice}}</td>
+                  <td>
+                    <a href="/items/show/{{id}}" class="btn btn-secondary">
+                      <i class="fa fa-angle-double-right"></i> Show
+                    </a>
+                  </td>
+                  <td>
+                    <form action="/users/cart/{{id}}?_method=DELETE" method="post" id="delete-form">
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {{else}}
+            <p>No items found.</p>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

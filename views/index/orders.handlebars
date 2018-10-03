@@ -1,4 +1,4 @@
-<h1>Orders</h1>
+{{!-- <h1>Orders</h1>
 
 {{#each orders}}
 <div class="card">
@@ -18,4 +18,51 @@
   {{else}}
   <p>No orders found.</p>
   {{/each}}
-</div>
+</div> --}}
+
+<section id="posts">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h4>Orders</h4>
+          </div>
+          {{#each orders}}
+          <h2>Ordered on: {{date}}</h2>
+
+          {{#each orderItems}}
+          <table class="table table-striped">
+            <thead class="thead-dark">
+              <tr>
+                <th>Preview</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><img src="{{itemImage}}" alt="" class="img-fluid" width="150" height="150"></td>
+                <td>{{itemName}}</td>
+                <td>{{itemPrice}}</td>
+                <td>
+                  <a href="/items/show/{{id}}" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Show
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {{/each}}
+          {{else}}
+          <p>No orders found.</p>
+
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
