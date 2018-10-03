@@ -8,7 +8,8 @@ const User = mongoose.model('users');
 //------- ROUTES: START
 
 router.get('/', (req, res) => {
-  res.redirect('/items');
+  // res.redirect('/items');
+  res.render('index/home');
 });
 
 router.get('/about', (req, res) => {
